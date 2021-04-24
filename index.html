@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>IndoApril</title>
+    <style>
+        * {
+            font-family: monospace;
+        }
+        
+        body,
+        html {
+            min-height: 100vh;
+        }
+        
+        body {
+            background-color: #aaa;
+            display: grid;
+            justify-content: center;
+            align-content: center;
+        }
+        
+        .container {
+            background-color: #fff;
+            border: 3px #000 solid;
+            border-radius: 20px;
+            width: 600px;
+            text-align: center;
+        }
+        
+        .section {
+            padding: 10px;
+        }
+        
+        .title {
+            border-bottom: 1px #000 solid;
+        }
+        
+        .text {
+            text-align: end;
+        }
+        
+        #search-fruit {
+            width: 50px;
+        }
+        
+        #list {
+            table-layout: fixed;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        
+        #list td {
+            padding: 5px;
+        }
+        
+        #list,
+        table input {
+            width: 100%;
+        }
+        
+        #status {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="section title">
+            <h1>IndoApril</h1>
+        </div>
+        <div class="section">
+            <p>Cari Buah</p>
+            <input class="text" id="search-fruit" />
+        </div>
+        <div class="section">
+            <p>Daftar Buah:</p>
+            <table id="list">
+                <thead>
+                    <tr>
+                        <th width="35%">Nama Buah</th>
+                        <th>Harga (Rp)</th>
+                        <th>Diskon (&#37;)</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div id="status"></div>
+    </div>
+    <script>
+        let displayFruit,
+            getSearchedFruit,
+            getDeletedFruit;
+    </script>
+    <script src="tugas7.js"></script>
+    <script>
+        (() => {
+            let searchFruitSelector = document.querySelector("#search-fruit"),
+                fruitListSelector = document.querySelector("#list tbody"),
+                m = () => {
+                    let deletedFruitIndex;
+                    let searchedFruit = searchFruitSelector.value;
+                    if ("function" != typeof displayFruits)
+                        return void alert("ERROR: fungsi displayFruits tidak ditemukan");
+                    if ("function" != typeof searchFruit)
+                        return void alert("ERROR: fungsi searchFruit tidak ditemukan");
+                    if ("function" != typeof deleteFruit)
+                        return void alert("ERROR: fungsi deleteFruit tidak ditemukan");
+                    (getSearchedFruit = () => searchedFruit),
+                    (displayFruit = (fruit, fruitIndex) => {
+                        if (typeof fruit == "object") {
+                            let row = document.createElement("tr"),
+                                fruitName = document.createElement("td");
+                            fruitName.innerText = fruit.name;
+                            row.appendChild(fruitName);
+                            let fruitPrice = document.createElement("td");
+                            (fruitPrice.innerText = fruit.price),
+                            row.appendChild(fruitPrice);
+                            let fruitDiscount = document.createElement("td");
+                            (fruitDiscount.innerText = fruit.discount),
+                            row.appendChild(fruitDiscount);
+                            let action = document.createElement("td"),
+                                deleteButton = document.createElement("button");
+                            (deleteButton.innerText = "Hapus"),
+                            (deleteButton.onclick = () => {
+                                deletedFruitIndex = fruitIndex, deleteFruit(), m();
+                            }),
+                            action.appendChild(deleteButton),
+                                row.appendChild(action),
+                                fruitListSelector.appendChild(row);
+                        } else {
+                            alert("ERROR: fungsi displayFruit tidak dipanggil dengan parameter objek");
+                        }
+                    }),
+                    (getDeletedFruitIndex = () => deletedFruitIndex);
+                    while (fruitListSelector.hasChildNodes()) {
+                        fruitListSelector.removeChild(fruitListSelector.firstChild);
+                    }
+                    searchedFruit ?
+                        (searchFruit()) :
+                        (displayFruits());
+                };
+            (searchFruitSelector.oninput = m),
+            m();
+        })();
+    </script>
+</body>
+
+</html>
